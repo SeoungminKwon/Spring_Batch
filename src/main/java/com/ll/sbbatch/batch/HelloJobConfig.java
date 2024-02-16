@@ -3,6 +3,8 @@ package com.ll.sbbatch.batch;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
@@ -27,6 +29,7 @@ public class HelloJobConfig {
                 .build();
     }
 
+    @JobScope
     @Bean
     public Step helloStep1(JobRepository jobRepository, Tasklet helloStep1Tasklet, PlatformTransactionManager platformTransactionManager){
         return new StepBuilder("helloStep1Tasklet", jobRepository)
@@ -34,6 +37,7 @@ public class HelloJobConfig {
                 .build();
     }
 
+    @StepScope
     @Bean
     public Tasklet helloStep1Tasklet() {
         return((contribution, chunkContext) -> {
