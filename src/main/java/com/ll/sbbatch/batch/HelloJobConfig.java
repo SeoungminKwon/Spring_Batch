@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -19,6 +20,10 @@ public class HelloJobConfig {
     public Job helloJob(JobRepository jobRepository, Step simpleStep1){
         return new JobBuilder("helloJob", jobRepository)
                 .start(simpleStep1)
+                /**JobParametersIncrementer인터페이스 구현체 RunIdIncrementer은 배치 작업 실행시마다 JobParameters에 고유한
+                 * 실행 Id를 추가 하여 같은 배치 작업이라도 서로 다른 실행으로 구분 될 수 있게 한다.
+                 */
+                .incrementer(new RunIdIncrementer())
                 .build();
     }
 
