@@ -35,7 +35,7 @@ public class HelloJobConfig {
     }
 
     @Bean
-    public Tasklet hellStep1Tasklet() {
+    public Tasklet helloStep1Tasklet() {
         return((contribution, chunkContext) -> {
             log.info("Hello World");
             System.out.println("Hello World");
