@@ -19,7 +19,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 public class HelloJob2Config {
     @Bean
-    public Job Hello2Job(JobRepository jobRepository, Step hello2Step1, Step hello2Step2){
+    public Job hello2Job(JobRepository jobRepository, Step hello2Step1, Step hello2Step2){
         return new JobBuilder("hello2Job", jobRepository)
                 .start(hello2Step1)
                 .next(hello2Step2)
