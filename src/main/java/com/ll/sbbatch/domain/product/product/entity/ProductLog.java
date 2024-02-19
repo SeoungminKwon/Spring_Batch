@@ -27,5 +27,9 @@ public class ProductLog {
     private LocalDateTime createDate;
     @LastModifiedDate
     private LocalDateTime modifyDate;
+    //@ForeignKey(ConstraintMode.NO_CONSTRAINT) -> 데이터 베이스 레벨의 외래키 제약 조건을 생성하지 않도록 함
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Product product;
     private String name;
 }
