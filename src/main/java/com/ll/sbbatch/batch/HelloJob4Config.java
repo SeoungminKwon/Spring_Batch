@@ -17,7 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.util.List;
 
 @Configuration
-public class Hello4JobConfig {
+public class HelloJob4Config {
     @Bean
     public Job hello4Job(JobRepository jobRepository, Step hello4Step1) {
         return new JobBuilder("hello4Job", jobRepository)
