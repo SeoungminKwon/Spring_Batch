@@ -65,18 +65,19 @@ public class MakeProductLogJobConfig {
     public ItemReader<Product> step1Reader(
             @Value("#{jobParameters['startDate']}") String _startDate,
             @Value("#{jobParameters['endDate']}") String _endDate
+            //@Value는 스프링 의존성 주입 기능 중 하나로 프로퍼티 파일, 환경 변수, 정의된 변수 ... 당양한 소스로 부터 값을 주입받는데 사용
     ){
 
         LocalDateTime startDate = Ut.date.parse(_startDate);
         LocalDateTime endDate = Ut.date.parse(_endDate);
 
         return new RepositoryItemReaderBuilder<Product>()
-                .name("step1Reader")
-                .repository(productRepository)
-                .methodName("findByCreateDateBetween")
-                .pageSize(CHUNK_SIZE)
-                .arguments(Arrays.asList(startDate, endDate))
-                .sorts(Collections.singletonMap("id", Sort.Direction.ASC))
+                .name("step1Reader") // 빈 이름 설정
+                .repository(productRepository) //데이터를 읽어올 저장소
+                .methodName("findByCreateDateBetween") //저장소에서 호출할 메서드 이름
+                .pageSize(CHUNK_SIZE) //읽기 작업 페이지 크기 지정
+                .arguments(Arrays.asList(startDate, endDate)) //findByCreateDateBetween에 넘겨줄 인자
+                .sorts(Collections.singletonMap("id", Sort.Direction.ASC)) //데이터를 읽어올시 정렬 방식
                 .build();
     }
 
