@@ -4,6 +4,7 @@ import com.ll.sbbatch.domain.product.product.entity.Product;
 import com.ll.sbbatch.domain.product.product.entity.ProductLog;
 import com.ll.sbbatch.domain.product.product.repository.ProductLogRepository;
 import com.ll.sbbatch.domain.product.product.repository.ProductRepository;
+import com.ll.sbbatch.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -16,19 +17,21 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.data.RepositoryItemReader;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 @RequiredArgsConstructor
 public class MakeProductLogJobConfig {
-    private final int CHUNK_SIZE = 50;
+    private final int CHUNK_SIZE = 20;
     private final ProductRepository productRepository;
     private final ProductLogRepository productLogRepository;
 
@@ -59,12 +62,20 @@ public class MakeProductLogJobConfig {
 
     @StepScope
     @Bean
-    public ItemReader<Product> step1Reader(){
+    public ItemReader<Product> step1Reader(
+            @Value("#{jobParameters['startDate']}") String _startDate,
+            @Value("#{jobParameters['endDate']}") String _endDate
+    ){
+
+        LocalDateTime startDate = Ut.date.parse(_startDate);
+        LocalDateTime endDate = Ut.date.parse(_endDate);
+
         return new RepositoryItemReaderBuilder<Product>()
                 .name("step1Reader")
                 .repository(productRepository)
-                .methodName("findAll")
+                .methodName("findByCreateDateBetween")
                 .pageSize(CHUNK_SIZE)
+                .arguments(Arrays.asList(startDate, endDate))
                 .sorts(Collections.singletonMap("id", Sort.Direction.ASC))
                 .build();
     }

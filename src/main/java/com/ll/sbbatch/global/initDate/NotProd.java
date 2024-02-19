@@ -1,5 +1,6 @@
 package com.ll.sbbatch.global.initDate;
 
+import com.ll.sbbatch.domain.product.product.entity.Product;
 import com.ll.sbbatch.domain.product.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 
 @Configuration
@@ -29,6 +31,10 @@ public class NotProd {
 
     @Transactional
     public void work1(){
-        IntStream.rangeClosed(1, 100).forEach(i -> productService.create("product" + i));
+        IntStream.rangeClosed(1, 50).forEach(i -> {
+            Product product = productService.create("product" + i);
+            product.setCreateDate(LocalDateTime.now().minusDays(1));
+        });
+        IntStream.rangeClosed(51, 100).forEach(i -> productService.create("product" + i));
     }
 }
